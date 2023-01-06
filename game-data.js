@@ -1,5 +1,3 @@
-
-
 export const GAME_DATA = {
     boardGame: null,
     GAME_SIZE: 10,
@@ -37,6 +35,7 @@ export const GAME_DATA = {
     },
     getAdjacentPixels: (i, j, boardGame) => {
         const myAdjacentPixels = [];
+        const myadJacent = [];
         myAdjacentPixels.push(GAME_DATA.getTopPixel(i, j, boardGame));
         myAdjacentPixels.push(GAME_DATA.getRightPixel(i, j, boardGame));
         myAdjacentPixels.push(GAME_DATA.getLeftPixel(i, j, boardGame));
@@ -45,40 +44,45 @@ export const GAME_DATA = {
         myAdjacentPixels.push(GAME_DATA.getTopLeftPixel(i, j, boardGame));
         myAdjacentPixels.push(GAME_DATA.getBottomRightPixel(i, j, boardGame));
         myAdjacentPixels.push(GAME_DATA.getBottomRightPixel(i, j, boardGame));
-        return myAdjacentPixels;
+        myAdjacentPixels.forEach(item=>{
+            if(item !== null){
+                myadJacent.push(item)
+            }
+        })
+        return myadJacent;
     },
     getTopPixel: (i, j, boardGame) => {
-        if (i > -1 + 1 && i < GAME_DATA.GAME_SIZE - 1 && j > -1 && j < GAME_DATA.GAME_SIZE) {
+        if (i > 0 && i < GAME_DATA.GAME_SIZE) {
             return boardGame[i - 1][j];
         }
         return null;
     },
     getRightPixel: (i, j, boardGame) => {
-        if (i > -1 && i < GAME_DATA.GAME_SIZE && j > -1 && j < GAME_DATA.GAME_SIZE - 1) {
+        if (j > -1 && j < GAME_DATA.GAME_SIZE - 1) {
             return boardGame[i][j + 1];
         }
-        return null;
+        return null;    
     },
     getLeftPixel: (i, j, boardGame) => {
-        if (i > -1 && i < GAME_DATA.GAME_SIZE && j > -1 + 1 && j < GAME_DATA.GAME_SIZE) {
+        if (j > 0 && j < GAME_DATA.GAME_SIZE) {
             return boardGame[i][j - 1];
         }
         return null;
     },
     getBottomPixel: (i, j, boardGame) => {
-        if (i > -1 && i < GAME_DATA.GAME_SIZE - 1 && j > -1 && j < GAME_DATA.GAME_SIZE) {
+        if (i > -1 && i < GAME_DATA.GAME_SIZE - 1 && j > -1) {
             return boardGame[i + 1][j];
         }
         return null;
     },
     getTopRightPixel: (i, j, boardGame) => {
-        if (i > -1 + 1 && i < GAME_DATA.GAME_SIZE && j > -1 && j < GAME_DATA.GAME_SIZE - 1) {
+        if (i > 0 && i < GAME_DATA.GAME_SIZE && j > -1 && j < GAME_DATA.GAME_SIZE - 1) {
             return boardGame[i - 1][j + 1];
         }
         return null;
     },
     getTopLeftPixel: (i, j, boardGame) => {
-        if (i > -1 + 1 && i < GAME_DATA.GAME_SIZE && j > -1 + 1 && j < GAME_DATA.GAME_SIZE) {
+        if (i > 0 && i < GAME_DATA.GAME_SIZE && j > 0 && j < GAME_DATA.GAME_SIZE) {
             return boardGame[i - 1][j - 1];
         }
         return null;
@@ -90,7 +94,7 @@ export const GAME_DATA = {
         return null;
     },
     getBottomLeftPixel: (i, j, boardGame) => {
-        if (i > -1 && i < GAME_DATA.GAME_SIZE - 1 && j > -1 + 1 && j < GAME_DATA.GAME_SIZE) {
+        if (i > -1 && i < GAME_DATA.GAME_SIZE - 1 && j > 0 && j < GAME_DATA.GAME_SIZE) {
             return boardGame[i + 1][j - 1];
         }
         return null;
@@ -117,24 +121,23 @@ export const GAME_DATA = {
         return boardGame;
     },
     updateBoardGameWithClick: (i, j, boardGame) => {
+        console.log(i,j)
         //MANY CODE TO DO HERE
         const pixel = boardGame[i][j];
-        console.log({pixel})
         if (pixel && pixel.setBoom === true) {
-            stop();
-        } else if (pixel.numberOfBoomAround === 0) {
+            GAME_DATA.stop();
+        } else if (pixel && pixel.numberOfBoomAround == 0) {
             pixel.status = 'visible';
             const adjacentPixel = GAME_DATA.getAdjacentPixels(i, j, boardGame)
-            console.log(adjacentPixel)
-            // adjacentPixel.forEach(item => {
-            //     if (item.numberOfBoomAround === 0) {
-            //         if (item.status === 'hidden') {
-            //             item.status = 'visible'
-            //             adjacentPixel.push(item)
-            //         }
-            //     }
-            // })
-        } else if (pixel.numberOfBoomAround !== 0) {
+            adjacentPixel.forEach(item => {
+                if (item.numberOfBoomAround == 0) {
+                    if (item.status == 'hidden') {
+                        item.status = 'visible'
+                        adjacentPixel.push(item)
+                    }
+                }
+            })
+        } else if (pixel && pixel.numberOfBoomAround !== 0) {
             pixel.innerHTML = pixel.numberOfBoomAround
         }
     },
@@ -152,5 +155,5 @@ export const GAME_DATA = {
             GAME_DISPLAY.getTableGame(),
             GAME_DISPLAY.displayBoargame,
             GAME_DATA.GAME_SIZE)
-    },
+    }
 }
