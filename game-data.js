@@ -1,3 +1,5 @@
+import { GAME_DISPLAY } from "./game-display.js";
+
 export const GAME_DATA = {
     boardGame: null,
     GAME_SIZE: 10,
@@ -70,7 +72,7 @@ export const GAME_DATA = {
         return null;
     },
     getBottomPixel: (i, j, boardGame) => {
-        if (i > -1 && i < GAME_DATA.GAME_SIZE - 1 && j > -1) {
+        if (i > -1 && i < GAME_DATA.GAME_SIZE - 1) {
             return boardGame[i + 1][j];
         }
         return null;
@@ -121,27 +123,32 @@ export const GAME_DATA = {
         return boardGame;
     },
     updateBoardGameWithClick: (i, j, boardGame) => {
-        console.log(i,j)
         //MANY CODE TO DO HERE
         const pixel = boardGame[i][j];
+        console.log(pixel)
         if (pixel && pixel.setBoom === true) {
+            pixel.status = 'bomb';
             GAME_DATA.stop();
-        } else if (pixel && pixel.numberOfBoomAround == 0) {
-            pixel.status = 'visible';
+        } else if (pixel && pixel.numberOfBoomAround === 0) {
+            pixel.status = 'marked';
             const adjacentPixel = GAME_DATA.getAdjacentPixels(i, j, boardGame)
             adjacentPixel.forEach(item => {
-                if (item.numberOfBoomAround == 0) {
-                    if (item.status == 'hidden') {
-                        item.status = 'visible'
-                        adjacentPixel.push(item)
+                if (item.numberOfBoomAround === 0) {
+                    adjacentPixel.push(item)
+                    if (item.status === 'hidden') {
+                        item.status = 'marked';
+                        
                     }
                 }
             })
-        } else if (pixel && pixel.numberOfBoomAround !== 0) {
-            pixel.innerHTML = pixel.numberOfBoomAround
+        } else if (pixel && pixel.numberOfBoomAround > 0) {
+            pixel.status = 'number'
+            console.log(pixel)
+            // GAME_DISPLAY.getTableGame().querySelector(pixel).innerHTML = 2
         }
+        GAME_DISPLAY.resetBoardGame()
     },
-
+    
     stop: () => {
         alert("GAME OVER YOU LOSE");
     },

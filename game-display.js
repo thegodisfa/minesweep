@@ -19,10 +19,11 @@ export const GAME_DISPLAY = {
     },
     createDivPixel: (pixel) => {
         const divPixel = document.createElement('div')
-        divPixel.dataset.status = pixel.status
+        divPixel.classList.add('pixel');
+        divPixel.dataset.status = pixel.status;
         divPixel.dataset.line = pixel.i;
         divPixel.dataset.column = pixel.j;
-        divPixel.classList.add('pixel');
+        divPixel.dataset.numberOfBoomAround = pixel.numberOfBoomAround;
         return divPixel
     },
 }
