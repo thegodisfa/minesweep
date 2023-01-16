@@ -24,7 +24,9 @@ export const GAME_DISPLAY = {
         divPixel.dataset.line = pixel.i;
         divPixel.dataset.column = pixel.j;
         divPixel.dataset.numberOfBoomAround = pixel.numberOfBoomAround;
-        divPixel.innerHTML = ''
+        if(divPixel.dataset.status === 'number'){
+            divPixel.innerHTML = pixel.numberOfBoomAround   
+        }
         return divPixel
     },
 }
