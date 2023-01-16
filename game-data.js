@@ -46,8 +46,8 @@ export const GAME_DATA = {
         myAdjacentPixels.push(GAME_DATA.getTopLeftPixel(i, j, boardGame));
         myAdjacentPixels.push(GAME_DATA.getBottomRightPixel(i, j, boardGame));
         myAdjacentPixels.push(GAME_DATA.getBottomRightPixel(i, j, boardGame));
-        myAdjacentPixels.forEach(item=>{
-            if(item !== null){
+        myAdjacentPixels.forEach(item => {
+            if (item !== null) {
                 myadJacent.push(item)
             }
         })
@@ -63,7 +63,7 @@ export const GAME_DATA = {
         if (j > -1 && j < GAME_DATA.GAME_SIZE - 1) {
             return boardGame[i][j + 1];
         }
-        return null;    
+        return null;
     },
     getLeftPixel: (i, j, boardGame) => {
         if (j > 0 && j < GAME_DATA.GAME_SIZE) {
@@ -124,31 +124,28 @@ export const GAME_DATA = {
     },
     updateBoardGameWithClick: (i, j, boardGame) => {
         //MANY CODE TO DO HERE
+        GAME_DISPLAY.resetBoardGame()
         const pixel = boardGame[i][j];
-        console.log(pixel)
-        if (pixel && pixel.setBoom === true) {
-            pixel.status = 'bomb';
-            GAME_DATA.stop();
-        } else if (pixel && pixel.numberOfBoomAround === 0) {
+        if (pixel.numberOfBoomAround === 0 && pixel.setBoom === false && pixel.status === 'hidden') {
             pixel.status = 'marked';
             const adjacentPixel = GAME_DATA.getAdjacentPixels(i, j, boardGame)
             adjacentPixel.forEach(item => {
-                if (item.numberOfBoomAround === 0) {
+                if (item.numberOfBoomAround === 0 && pixel.setBoom === false) {
                     adjacentPixel.push(item)
                     if (item.status === 'hidden') {
-                        item.status = 'marked';
-                        
+                        GAME_DATA.updateBoardGameWithClick(item.i, item.j, boardGame)
                     }
                 }
             })
-        } else if (pixel && pixel.numberOfBoomAround > 0) {
+        }else if (pixel.numberOfBoomAround > 0 && pixel.status === 'hidden') {
             pixel.status = 'number'
-            console.log(pixel)
-            // GAME_DISPLAY.getTableGame().querySelector(pixel).innerHTML = 2
-        }
-        GAME_DISPLAY.resetBoardGame()
+            GAME_DISPLAY.createDivPixel(pixel).innerHTML = pixel.numberOfBoomAround
+        }else if (pixel.setBoom === true && pixel.status === 'hidden') {
+            pixel.status = 'bomb';
+            GAME_DATA.stop();
+        } 
     },
-    
+
     stop: () => {
         alert("GAME OVER YOU LOSE");
     },
